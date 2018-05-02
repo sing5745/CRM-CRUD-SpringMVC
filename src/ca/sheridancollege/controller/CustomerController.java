@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.sheridancollege.Entity.Customer;
 import ca.sheridancollege.dao.CustomerDAO;
@@ -28,9 +32,32 @@ public class CustomerController {
 		return "list-customers";
 	}
 	
-	@RequestMapping("/")
-	public String welcome(Model model) {
+	@GetMapping("/showFormForAdd")
+	public String showFormForAdd(Model model) {
 		
-		return "welcome";
+		model.addAttribute("customer", new Customer());
+		
+		return "customer-form";
 	}
+	
+	@PostMapping("/saveCustomer")
+	public String saveCustomer(@ModelAttribute("customer") Customer customer) {
+	
+		customerDAO.saveCustomer(customer);
+		System.out.println("Customer added");
+		return "redirect:/customer/list";
+	}
+	
+	@GetMapping("/showFormForUpdate")
+	public String showFormForUpdate(@RequestParam("customerID") int id, Model model) {
+		
+		Customer customer = customerDAO.getCustomer(id);
+		
+		model.addAttribute("customer", customer);
+		
+		return "customer-form";
+	}
+	
+	
+	
 }
