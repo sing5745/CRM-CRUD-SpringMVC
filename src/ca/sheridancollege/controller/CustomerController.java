@@ -58,6 +58,12 @@ public class CustomerController {
 		return "customer-form";
 	}
 	
+	@GetMapping("/delete")
+	public String deleteCustomer(@RequestParam("customerID") int id) {
+		
+		customerDAO.deleteCustomer(id);
+		return "redirect:/customer/list";
+	}
 	
 	
 }
